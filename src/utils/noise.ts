@@ -34,18 +34,15 @@ const getTimeBasedNoise = (baseNoise: number, timestamp: number) => {
   return baseNoise + (Math.random() * 5 - 2.5);
 };
 
+// Generate readings for major cities with time-based variations
 const generateMajorCityReadings = () => {
   const now = Date.now();
   const readings: NoiseReading[] = [];
-  const currentDate = new Date();
-  const currentHour = currentDate.getHours(); // Get current hour (0-23)
-
+  
+  // Generate 24 hours of data for each city
   majorCities.forEach((city, cityIndex) => {
-    // Generate data only for hours that have occurred today (0 to currentHour)
-    for (let hour = 0; hour <= currentHour; hour++) {
-      const hourAgo = currentHour - hour;
-      const timestamp = now - (hourAgo * 3600000);
-      
+    for (let hour = 0; hour < 24; hour++) {
+      const timestamp = now - (hour * 3600000); // Go back hour by hour
       const baseNoise = getTimeBasedNoise(city.baseNoise, timestamp);
       
       readings.push({
@@ -63,13 +60,21 @@ const generateMajorCityReadings = () => {
   return readings;
 };
 
+// Generate readings for nearby areas with time-based variations
 const generateNearbyAreas = (center: { lat: number, lng: number }) => {
   const now = Date.now();
   const readings: NoiseReading[] = [];
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
 
-  // ... existing area definitions ...
+  const areas = [
+    { name: 'Tambaram', offset: { lat: -0.05, lng: 0.02 }, baseNoise: 72 },
+    { name: 'Vandalur', offset: { lat: -0.08, lng: 0.03 }, baseNoise: 68 },
+    { name: 'Perungalathur', offset: { lat: -0.06, lng: 0.01 }, baseNoise: 70 },
+    { name: 'Chromepet', offset: { lat: -0.04, lng: 0.02 }, baseNoise: 75 },
+    { name: 'Pallavaram', offset: { lat: -0.03, lng: 0.01 }, baseNoise: 73 },
+    { name: 'Guduvanchery', offset: { lat: -0.09, lng: 0.02 }, baseNoise: 65 }
+  ];
 
   areas.forEach((area, areaIndex) => {
     // Generate data only up to current hour
